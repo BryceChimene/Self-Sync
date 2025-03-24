@@ -1,65 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import './partials/onboarding_page.dart';
+import './partials/onboarding_final_page.dart';
+import './partials/onboarding_indicator.dart';
 
-class OnboardingScreen extends StatelessWidget {
+class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
 
-  Future<void> _completeOnboarding(BuildContext context) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('onboardingComplete', true);
-    context.go('/auth'); // Navigate to Authentication screen
-  }
+  @override
+  _OnboardingScreenState createState() => _OnboardingScreenState();
+}
+
+class _OnboardingScreenState extends State<OnboardingScreen> {
+  final PageController _pageController = PageController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
+      body: Column(
         children: [
-          _buildPage(
-            context,
-            "Welcome to FitSocial",
-            "Track workouts, nutrition, and connect with others.",
-            "assets/images/onboarding1.png",
+          Expanded(
+            child: PageView(
+              controller: _pageController,
+              children: const [
+                OnboardingPage(
+                  title: "Welcome to Self Sync",
+                  subtitle: "Track workouts, nutrition, and connect with others.",
+                ),
+                OnboardingPage(
+                  title: "Stay Consistent",
+                  subtitle: "Monitor your habits and see your progress over time.",
+                ),
+                OnboardingFinalPage(),
+              ],
+            ),
           ),
-          _buildPage(
-            context,
-            "Stay Consistent",
-            "Monitor your habits and see your progress over time.",
-            "assets/images/onboarding2.png",
-          ),
-          _buildFinalPage(context),
+          OnboardingIndicator(controller: _pageController),
         ],
       ),
-    );
-  }
-
-  Widget _buildPage(BuildContext context, String title, String subtitle, String image) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Image.asset(image, height: 300),
-        const SizedBox(height: 20),
-        Text(title, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 10),
-        Text(subtitle, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16)),
-      ],
-    );
-  }
-
-  Widget _buildFinalPage(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text("Get Started", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 20),
-        const Text("Create an account or log in to continue.", textAlign: TextAlign.center),
-        const SizedBox(height: 40),
-        ElevatedButton(
-          onPressed: () => _completeOnboarding(context),
-          child: const Text("Continue"),
-        ),
-      ],
     );
   }
 }
