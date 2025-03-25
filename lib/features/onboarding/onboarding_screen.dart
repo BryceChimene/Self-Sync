@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import './partials/onboarding_page.dart';
-import './partials/onboarding_final_page.dart';
 import './partials/onboarding_indicator.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -30,7 +29,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   title: "Stay Consistent",
                   subtitle: "Monitor your habits and see your progress over time.",
                 ),
-                OnboardingFinalPage(),
+                OnboardingPage(
+                  title: "Get Started",
+                  subtitle: "Create an account or log in to continue",
+                ),
               ],
             ),
           ),
