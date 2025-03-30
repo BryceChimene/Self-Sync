@@ -1,38 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../providers/auth_provider.dart';
 import 'package:go_router/go_router.dart';
+import '../../providers/auth_provider.dart';
 
-class AuthScreen extends ConsumerStatefulWidget {
-  const AuthScreen({super.key});
+class SignUpScreen extends ConsumerStatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  ConsumerState<AuthScreen> createState() => _AuthScreenState();
+  ConsumerState<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _AuthScreenState extends ConsumerState<AuthScreen> {
+class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _isLogin = true;
   bool _isLoading = false;
   String? _errorMessage;
 
-  void _authenticate() async {
+  void _signUp() async {
     setState(() => _isLoading = true);
     final authController = ref.read(authControllerProvider);
-    
-    String? error;
-    if (_isLogin) {
-      error = await authController.signIn(_emailController.text, _passwordController.text);
-    } else {
-      error = await authController.signUp(_emailController.text, _passwordController.text);
-    }
+
+    final error = await authController.signUp(_emailController.text, _passwordController.text);
 
     if (error != null) {
       setState(() => _errorMessage = error);
     } else {
       context.go('/dashboard'); // Navigate to dashboard on success
     }
+
     setState(() => _isLoading = false);
   }
 
@@ -45,17 +40,17 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(_isLogin ? "Login" : "Sign Up", style: const TextStyle(fontSize: 24)),
+              const Text("Sign Up", style: TextStyle(fontSize: 24)),
               TextField(controller: _emailController, decoration: const InputDecoration(labelText: "Email")),
               TextField(controller: _passwordController, decoration: const InputDecoration(labelText: "Password"), obscureText: true),
               if (_errorMessage != null) Text(_errorMessage!, style: const TextStyle(color: Colors.red)),
               const SizedBox(height: 10),
               _isLoading
                   ? const CircularProgressIndicator()
-                  : ElevatedButton(onPressed: _authenticate, child: Text(_isLogin ? "Login" : "Sign Up")),
+                  : ElevatedButton(onPressed: _signUp, child: const Text("Sign Up")),
               TextButton(
-                onPressed: () => setState(() => _isLogin = !_isLogin),
-                child: Text(_isLogin ? "Create an account" : "Already have an account? Login"),
+                onPressed: () => context.go('/login'),
+                child: const Text("Already have an account? Login"),
               ),
             ],
           ),
@@ -64,5 +59,3 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     );
   }
 }
-
-

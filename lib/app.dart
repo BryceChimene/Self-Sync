@@ -4,7 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:self_sync/features/home_screen/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'features/onboarding/onboarding_screen.dart';
-import 'features/auth/auth_screen.dart';
+import 'features/auth/login_screen.dart';
+import 'features/auth/signup_screen.dart';
 import 'providers/auth_provider.dart';
 
 class App extends ConsumerStatefulWidget {
@@ -37,7 +38,7 @@ class _MyAppState extends ConsumerState<App> {
     }
 
     final user = ref.watch(authStateProvider);
-    final initialLocation = _showOnboarding! ? '/onboarding' : (user == null ? '/auth' : '/dashboard');
+    final initialLocation = _showOnboarding! ? '/onboarding' : (user == null ? '/login' : '/dashboard');
 
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
@@ -47,7 +48,8 @@ class _MyAppState extends ConsumerState<App> {
         initialLocation: initialLocation,
         routes: [
           GoRoute(path: '/onboarding', builder: (_, __) => const OnboardingScreen()),
-          GoRoute(path: '/auth', builder: (_, __) => const AuthScreen()),
+          GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
+          GoRoute(path: '/signup', builder: (_, __) => const SignUpScreen()),
           GoRoute(path: '/dashboard', builder: (_, __) => const HomeScreen()),
         ],
       ),

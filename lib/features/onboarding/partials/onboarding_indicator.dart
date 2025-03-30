@@ -16,7 +16,7 @@ class OnboardingIndicator extends StatefulWidget {
 Future<void> _completeOnboarding(BuildContext context) async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.setBool('onboardingComplete', true);
-  context.go('/auth'); // Navigate to Authentication screen
+  context.go('/login'); // Navigate to Authentication screen
 }
 
 class _OnboardingIndicatorState extends State<OnboardingIndicator> {
