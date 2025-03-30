@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import './app.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+
+  // Preserve splash screen until initialization is complete
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   // Load environment variables
   await dotenv.load(fileName: ".env");
@@ -16,6 +20,9 @@ void main() async {
     anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
 
-  // Stores the state of providers at it's root 
+  // Remove splash screen after initialization
+  FlutterNativeSplash.remove();
+
+  // Stores the state of providers at its root
   runApp(const ProviderScope(child: App()));
 }
